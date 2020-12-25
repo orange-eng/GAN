@@ -6,7 +6,8 @@
 ## 列表（后期会根据学习内容增加）
 * GAN
     * MNIST手写数字识别
-
+* DCGAN
+    * MNIST手写数字识别
 
 
 ### 目录
@@ -31,6 +32,36 @@
 
 生成模型不断训练的目的是生成 让判别模型无法判断真伪的输出。
 判别模型不断训练的的目的是判断出输入图片的真伪。
+
+#### 1、Generator
+生成网络的目标是输入一行正态分布随机数，生成mnist手写体图片，因此它的输入是一个长度为N的一维的向量，输出一个28,28,1维的图片。
+#### 2、Discriminator
+判别模型的目的是根据输入的图片判断出真伪。因此它的输入一个28,28,1维的图片，输出是0到1之间的数，1代表判断这个图片是真的，0代表判断这个图片是假的。
+#### 训练思路
+GAN的训练分为如下几个步骤：
+1、随机选取batch_size个真实的图片。
+2、随机生成batch_size个N维向量，传入到Generator中生成batch_size个虚假图片。
+3、真实图片的label为1，虚假图片的label为0，将真实图片和虚假图片当作训练集传入到Discriminator中进行训练。
+4、将虚假图片的Discriminator预测结果与1的对比作为loss对Generator进行训练（与1对比的意思是，如果Discriminator将虚假图片判断为1，说明这个生成的图片很“真实”）。
+
+https://blog.csdn.net/weixin_44791964/article/details/103729797
+#### DCGAN使用MNIST实现手写数字识别
+DCGAN的全称是Deep Convolutional Generative Adversarial Networks ,
+意即深度卷积对抗生成网络。
+
+它是由Alec Radford在论文Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks中提出的。实际上它是在GAN的基础上增加深度卷积网络结构。
+#### 1、Generator
+生成网络的目标是输入一行正态分布随机数，生成mnist手写体图片，因此它的输入是一个长度为N的一维的向量，输出一个28,28,1维的图片。与普通GAN不同的是，生成网络是卷积神经网络。
+#### 2、Discriminator
+判别模型的目的是根据输入的图片判断出真伪。因此它的输入一个28,28,1维的图片，输出是0到1之间的数，1代表判断这个图片是真的，0代表判断这个图片是假的。与普通GAN不同的是，它使用的是卷积神经网络。
+
+#### 训练思路
+DCGAN的训练和GAN一样，分为如下几个步骤：
+1、随机选取batch_size个真实的图片。
+2、随机生成batch_size个N维向量，传入到Generator中生成batch_size个虚假图片。
+3、真实图片的label为1，虚假图片的label为0，将真实图片和虚假图片当作训练集传入到Discriminator中进行训练。
+4、将虚假图片的Discriminator预测结果与1的对比作为loss对Generator进行训练（与1对比的意思是，如果Discriminator将虚假图片判断为1，说明这个生成的图片很“真实”）。
+https://blog.csdn.net/weixin_44791964/article/details/103743038
 
 ## 所需环境
 * Anaconda3（建议使用）
