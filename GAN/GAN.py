@@ -28,9 +28,16 @@ class GAN():
         optimizer = Adam(0.0002,0.5)
         #判别器
         self.discriminator = self.build_discriminator()
-        self.discriminator.compile(loss='binary_crossentropy',  #交叉熵
-                                    optimizer=optimizer,
-                                    metrics=['accuracy'])
+        self.discriminator.compile(loss='binary_crossentropy',  #交叉熵作为损失函数
+                                    optimizer=optimizer,        #优化器为Adam
+                                    metrics=['accuracy'])       #评价指标为准确度
+'''
+通过调用 compile 方法配置该模型的学习流程：
+optimizer：优化器，如Adam
+loss：计算损失，这里用的是交叉熵损失
+metrics: 列表，包含评估模型在训练和测试时的性能的指标，典型用法是metrics=[‘accuracy’]。
+如果要在多输出模型中为不同的输出指定不同的指标，可向该参数传递一个字典，例如metrics={‘output_a’: ‘accuracy’}
+'''
         self.generator = self.build_generator()
         gan_input = Input(shape=(self.latent_dim,))
         img = self.generator(gan_input)
@@ -97,7 +104,6 @@ class GAN():
             imgs = X_train[idx]
 
             noise = np.random.normal(loc=0,scale=1,size=(batch_size,self.latent_dim))    #正态分布生成一组数字
-
             gen_imgs = self.generator.predict(noise)
 
             d_loss_real = self.discriminator.train_on_batch(imgs,valid)
@@ -106,7 +112,7 @@ class GAN():
 
             #训练generator
             noise = np.random.normal(loc=0,scale=1,size=(batch_size,self.latent_dim))
-            g_loss = self.combined.train_on_batch(noise,valid)
+            g_loss = self.combined.train_on_batch(noise,valid)                          #训练的目的是，尽可能让生成的图片，评估结果为真
             print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[1], g_loss))
             if epoch % sample_interval == 0:
                 self.sample_images(epoch)
